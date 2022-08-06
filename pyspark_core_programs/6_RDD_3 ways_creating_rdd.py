@@ -20,8 +20,13 @@ for rowdata in dataOutput:
     print(rowdata)
 
 #2nd way of creating rdd. when u read data from file/table using  spark context
-#here the no of partitions for rdd will be allocated same as how many partitions file takes in hdfs or dbfs.
+#here the no of partitions for rdd will be allocated same as how many unique blocks file takes in hdfs or dbfs. 
+#in hdfs each block has 3 replicas. so unique blocks for file it will consider. 
 text_file = sc.textFile("dbfs:/FileStore/shared_uploads/vissu4u4ever@gmail.com/2_EmployeeData-2.txt")
+
+#if i specify like below the no of partions = m(no of unique blocks of file in hdfs)* n(number specified below as parameter.)
+#text_file = sc.textFile("dbfs:/FileStore/shared_uploads/vissu4u4ever@gmail.com/2_EmployeeData-2.txt",n)
+
 
 #3rd way of creating rdd.
 employee_data =text_file.map(lambda line: line.split(",")).map(lambda x: (x[3], int(x[2])))
